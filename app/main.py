@@ -23,6 +23,7 @@ from PIL import Image
 import torchvision.transforms as transforms
 import io
 import time
+import numpy as np
 
 
 load_dotenv(".env")
@@ -47,54 +48,42 @@ model.eval()
 
 
 def process_image(image):
-    # Check if the image is not in 'RGB' mode
     if image.mode != "RGB":
         image = image.convert("RGB")
 
-    # Define the transformation: resize to 512x512 and convert to tensor
-    transform = transforms.Compose(
-        [
-            transforms.Resize((512, 512)),  # Resize the image to 512x512
-            transforms.ToTensor(),  # Convert the image to a PyTorch tensor
-        ]
-    )
+    transform = transforms.Compose([
+        transforms.Resize((512, 512)),
+        transforms.ToTensor(),
+    ])
 
-    # Apply the transformation
     tensor_image = transform(image)
 
-    # Now tensor_image is a PyTorch tensor ready to be used in your model
-
     with torch.no_grad():
-        # Predict
         prediction = model(tensor_image.unsqueeze(0))
-
-        print(prediction.shape)
-
         predicted_mask = torch.argmax(prediction[0], axis=0)
-
-        print(predicted_mask.shape)
-
-        print(type(predicted_mask))
-
+    
     if predicted_mask.dtype != torch.float32:
-        predicted_mask = predicted_mask.float()  # Convert tensor to float
+        predicted_mask = predicted_mask.float()
+    
+    # Create a new RGBA image for output with the same size as the mask
+    output_image = Image.new("RGBA", predicted_mask.size(), (0, 0, 0, 0))
+    
+    # Prepare an array from the predicted mask for processing
+    mask_array = np.array(predicted_mask)
 
-    model_output = predicted_mask.unsqueeze(0)  # Shape becomes [1, 512, 512]
+    # Set pixels in the output image to red where the mask is 1
+    red_color = (29, 141, 47, 255)
+    transparent = (255, 0, 0, 255)
 
-    # Make sure your tensor is on CPU and has the right type
-    tensor = model_output.cpu()
-
-    # Since tensor is 0s and 1s, we directly multiply by 255 to match uint8 image range
-    tensor = tensor.mul(255).byte()
-
-    # Convert tensor to a PIL image
-    # The tensor should be squeezed to remove the channel dimension if it's singular
-    image = Image.fromarray(tensor.squeeze(0).numpy())
+    # Using numpy to set the color
+    output_pixels = np.array(output_image)
+    output_pixels[mask_array == 1] = transparent
+    output_pixels[mask_array == 0] = red_color
+    output_image = Image.fromarray(output_pixels, "RGBA")
 
     buffer = io.BytesIO()
-    # Save the image
-    image.save(buffer, format="PNG")
-
+    output_image.save(buffer, format="PNG")
+    
     return buffer
 
 

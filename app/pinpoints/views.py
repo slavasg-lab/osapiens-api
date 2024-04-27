@@ -37,8 +37,22 @@ async def create_pinpoint(
 
 
 @router.get("/pinpoints/", status_code=200)
-async def create_pinpoint(db: Session = Depends(get_db)):
-    pinpoints = db.query(PinpointModel).options(joinedload(PinpointModel.user)).all()
+async def create_pinpoint(
+    max_latitude: float,
+    min_latitude: float,
+    max_longitude: float,
+    min_longitude: float,
+    db: Session = Depends(get_db),
+):
+    pinpoints = (
+        db.query(PinpointModel)
+        .filter(PinpointModel.latitude <= max_latitude)
+        .filter(PinpointModel.latitude >= min_latitude)
+        .filter(PinpointModel.longitude <= max_longitude)
+        .filter(PinpointModel.longitude >= min_longitude)
+        .options(joinedload(PinpointModel.user))
+        .all()
+    )
 
     db.close()
     return {"pinpoints": pinpoints}
