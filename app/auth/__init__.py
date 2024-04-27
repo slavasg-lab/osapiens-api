@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.sneakers.views import router
+from app.auth.views import router
 
 API_STR = "/api"
 

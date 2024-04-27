@@ -1,8 +1,6 @@
-from pydantic import BaseModel, Field, conint
-from typing import Optional
+from pydantic import BaseModel, Field
 
-
-
-class UserSchema(BaseModel):
-    email: str = Field(example="1@gmail.com")
-    full_name: str = Field(example="Abdula Mahachkambaev")
+class User(BaseModel):
+    id: str = Field(example="1")
+    email: str = Field(example="1")
+    password: str = Field(example="1")

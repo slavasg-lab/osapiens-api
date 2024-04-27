@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 from app.images import router as image_router
 from app.core.main_router import router as main_router
+from app.auth import router as auth_router
 from app.core.logger import init_logging
 
 load_dotenv(".env")
@@ -17,6 +18,7 @@ app.add_middleware(DBSessionMiddleware, db_url=os.environ["DATABASE_URL"])
 app.include_router(image_router)
 app.include_router(main_router)
 app.include_router(root_router)
+app.include_router(auth_router)
 
 init_logging()
 
