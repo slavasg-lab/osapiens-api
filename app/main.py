@@ -2,15 +2,18 @@ import os
 from fastapi import FastAPI, APIRouter
 from fastapi_sqlalchemy import DBSessionMiddleware
 from dotenv import load_dotenv
+from fastapi.security import OAuth2PasswordBearer
 
 from app.images import router as image_router
 from app.core.main_router import router as main_router
 from app.auth import router as auth_router
+from app.users import router as users_router
 from app.core.logger import init_logging
 
 load_dotenv(".env")
 
 root_router = APIRouter()
+
 
 app = FastAPI(title="osapiens API")
 app.add_middleware(DBSessionMiddleware, db_url=os.environ["DATABASE_URL"])
@@ -18,6 +21,7 @@ app.add_middleware(DBSessionMiddleware, db_url=os.environ["DATABASE_URL"])
 app.include_router(image_router)
 app.include_router(main_router)
 app.include_router(root_router)
+app.include_router(users_router)
 app.include_router(auth_router)
 
 init_logging()

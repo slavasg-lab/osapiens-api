@@ -1,8 +1,9 @@
 import os
 from dotenv import load_dotenv
 from typing import Annotated
+from loguru import logger
 
-from fastapi import Depends, APIRouter, HTTPException, status
+from fastapi import Depends, APIRouter, HTTPException, status, Header
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from app.auth.schema import TokenData
@@ -26,7 +27,7 @@ def create_access_token(email: str, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Session):
+async def get_current_user(token: str, db: Session):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -34,15 +35,27 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: Se
     )
     try:
         payload = jwt.decode(token, os.environ["SECRET_KEY"], algorithms=[os.environ["ALGORITHM"]])
-        username: str = payload.get("sub")
-        if username is None:
+        
+        user_email: str = payload["email"]
+        if user_email is None:
             raise credentials_exception
-        token_data = TokenData(username=username)
+
+        user = db.query(UserModel).filter(UserModel.email == user_email).first()
+
+        if user is None:
+            raise credentials_exception
+        
+        return user
     except JWTError:
         raise credentials_exception
 
-    user = db.query(UserModel).filter(UserModel.email == token_data.username).first()
+    
 
-    if user is None:
-        raise credentials_exception
-    return user
+def get_token_from_header(Authorization: str = Header()):
+    logger.error("#auth", Authorization)
+    if not Authorization:
+        raise HTTPException(status_code=401, detail="Invalid authorization headers")
+    if Authorization.split()[0].lower() != "bearer":
+        raise HTTPException(status_code=401, detail="Authorization header must start with Bearer")
+    return Authorization.split()[1]
+
