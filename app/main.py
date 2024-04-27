@@ -72,13 +72,13 @@ def process_image(image):
     mask_array = np.array(predicted_mask)
 
     # Set pixels in the output image to red where the mask is 1
-    red_color = (29, 141, 47, 170)
-    transparent = (255, 0, 0, 125)
+    green_color = (29, 141, 47, 220)
+    red_color = (255, 0, 0, 125)
 
     # Using numpy to set the color
     output_pixels = np.array(output_image)
-    output_pixels[mask_array == 1] = transparent
-    output_pixels[mask_array == 0] = red_color
+    output_pixels[mask_array == 1] = red_color
+    output_pixels[mask_array == 0] = green_color
     output_image = Image.fromarray(output_pixels, "RGBA")
 
     buffer = io.BytesIO()
