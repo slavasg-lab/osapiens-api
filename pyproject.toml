@@ -5,7 +5,7 @@ description = "osapiens Makeathon API"
 authors = ["Viacheslav Sydora"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10.4"
 python-multipart = "^0.0.9"
 fastapi = "^0.97.0"
 FastAPI-SQLAlchemy = "^0.2.1"
@@ -23,3 +23,6 @@ loguru = "^0.7.0"
 tenacity = "^8.2.2"
 psycopg = "^3.1.9"
 pre-commit = "^3.3.3"
+pillow = "^10.3.0"
+numpy = "^1.26.0"
+torch = "^2.3.0"
