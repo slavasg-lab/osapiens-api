@@ -12,7 +12,7 @@ import io
 router = APIRouter()
 
 
-@router.post("/mask", status_code=200)
+@router.post("/images/mask", status_code=200)
 async def get_mask(file: UploadFile):
     """
     gets an image.

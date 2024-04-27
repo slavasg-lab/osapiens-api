@@ -10,7 +10,7 @@ from app.auth.jwt import create_access_token
 router = APIRouter()
 
 
-@router.post("/sign-up", status_code=200)
+@router.post("/auth/sign-up", status_code=200)
 async def sign_up(payload: SignUpSchema, db: Session = Depends(get_db)):
     """
     signs up a user.
@@ -37,7 +37,7 @@ async def sign_up(payload: SignUpSchema, db: Session = Depends(get_db)):
     return Token(access_token=access_token, token_type="bearer")
 
 
-@router.post("/log-in", status_code=200)
+@router.post("/auth/log-in", status_code=200)
 async def sign_up(payload: LogInSchema, db: Session = Depends(get_db)):
     """
     signs up a user.

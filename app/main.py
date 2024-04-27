@@ -8,6 +8,7 @@ from app.images import router as image_router
 from app.core.main_router import router as main_router
 from app.auth import router as auth_router
 from app.users import router as users_router
+from app.pinpoints import router as pinpoints_router
 from app.core.logger import init_logging
 
 load_dotenv(".env")
@@ -23,6 +24,8 @@ app.include_router(main_router)
 app.include_router(root_router)
 app.include_router(users_router)
 app.include_router(auth_router)
+app.include_router(auth_router)
+app.include_router(pinpoints_router)
 
 init_logging()
 

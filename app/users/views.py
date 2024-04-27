@@ -19,7 +19,7 @@ router = APIRouter()
 
 
 
-@router.get("/me", status_code=200)
+@router.get("/users/me", status_code=200)
 async def get_me(db: Session = Depends(get_db), token: str = Depends(get_token)):
 
     current_user = await get_current_user(token, db)

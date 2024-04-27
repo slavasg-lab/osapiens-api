@@ -28,6 +28,7 @@ if config.config_file_name is not None:
 
 from app.core.db.session import Base
 from app.users.models import User
+from app.pinpoints.models import Pinpoint
 
 target_metadata = Base.metadata
 
