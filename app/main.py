@@ -13,6 +13,8 @@ from app.auth import router as auth_router
 from app.users import router as users_router
 from app.pinpoints import router as pinpoints_router
 from app.core.logger import init_logging
+from fastapi.middleware.cors import CORSMiddleware
+
 
 from app.images.model import ForestSegmentation
 import torch
@@ -97,6 +99,13 @@ def process_image(image):
 
 
 app = FastAPI(title="osapiens API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Allows all origins, or specify domains
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 app.add_middleware(DBSessionMiddleware, db_url=os.environ["DATABASE_URL"])
 
 
@@ -118,13 +127,13 @@ async def get_mask(file: UploadFile):
 
     end_time = time.time()
 
-    return {"time": end_time - start_time}
+    # return {"time": end_time - start_time}
 
-    # return StreamingResponse(
-    #     buffer,
-    #     media_type="image/png",
-    #     headers={"Content-Disposition": "attachment; filename=mask.png"},
-    # )
+    return StreamingResponse(
+        buffer,
+        media_type="image/png",
+        headers={"Content-Disposition": "attachment; filename=mask.png"},
+    )
 
 
 app.include_router(image_router)
