@@ -72,8 +72,8 @@ def process_image(image):
     mask_array = np.array(predicted_mask)
 
     # Set pixels in the output image to red where the mask is 1
-    red_color = (29, 141, 47, 255)
-    transparent = (255, 0, 0, 255)
+    red_color = (29, 141, 47, 57)
+    transparent = (255, 0, 0, 34)
 
     # Using numpy to set the color
     output_pixels = np.array(output_image)
