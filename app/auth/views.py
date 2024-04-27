@@ -38,7 +38,7 @@ async def sign_up(payload: SignUpSchema, db: Session = Depends(get_db)):
 
 
 @router.post("/auth/log-in", status_code=200)
-async def sign_up(payload: LogInSchema, db: Session = Depends(get_db)):
+async def log_in(payload: LogInSchema, db: Session = Depends(get_db)):
     """
     signs up a user.
 

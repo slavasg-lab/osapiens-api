@@ -9,27 +9,22 @@ import io
 
 
 
+
 router = APIRouter()
 
 
-@router.post("/images/mask", status_code=200)
-async def get_mask(file: UploadFile):
-    """
-    gets an image.
+# @router.post("/images/mask", status_code=200)
+# async def get_mask(file: UploadFile):
+#     """
+#     gets an image.
 
-    Returns:
-        mask: of the same size of as the image.
-    """
+#     Returns:
+#         mask: of the same size of as the image.
+#     """
 
-    image_data = await file.read()
-    image = Image.open(io.BytesIO(image_data))
-    # Process your image and generate a mask as a numpy array
-    mask = np.where(np.array(image) > 128, 1, 0)  # Example threshold operation
-    mask_image = Image.fromarray((mask * 255).astype(np.uint8))  # Convert to uint8 image
+#     image_data = await file.read()
+#     image = Image.open(io.BytesIO(image_data))
 
-    # Save to a BytesIO object
-    buf = io.BytesIO()
-    mask_image.save(buf, format='PNG')
-    buf.seek(0)
+#     mask = process_image(image)
     
-    return StreamingResponse(buf, media_type='image/png', headers={"Content-Disposition": "attachment; filename=mask.png"})
+#     return StreamingResponse(mask, media_type='image/png', headers={"Content-Disposition": "attachment; filename=mask.png"})
