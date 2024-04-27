@@ -51,11 +51,10 @@ async def get_current_user(token: str, db: Session):
 
     
 
-def get_token_from_header(Authorization: str = Header()):
-    logger.error("#auth", Authorization)
-    if not Authorization:
-        raise HTTPException(status_code=401, detail="Invalid authorization headers")
-    if Authorization.split()[0].lower() != "bearer":
-        raise HTTPException(status_code=401, detail="Authorization header must start with Bearer")
-    return Authorization.split()[1]
-
+def get_token(authorization22: str = Header(None)):
+    if authorization22 is None:
+        raise HTTPException(status_code=401, detail="Authorization header missing")
+    try:
+        return authorization22.split(" ")[1]
+    except:
+        raise HTTPException(status_code=401, detail="Authorization header invalid")
