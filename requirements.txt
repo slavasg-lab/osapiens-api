@@ -17,4 +17,3 @@ pre-commit==3.3.3
 pillow==10.3.0
 numpy==1.26.0
 python-jose==3.3.0
-segmentation-models-pytorch==0.3.3
