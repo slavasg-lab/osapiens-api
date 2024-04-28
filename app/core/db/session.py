@@ -1,5 +1,5 @@
 import os
-import orjson
+import json
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -9,27 +9,28 @@ load_dotenv(".env")
 
 Base = declarative_base()
 
-
-def orjson_serializer(obj):
+def json_serializer(obj):
     """
-    Note that `orjson.dumps()` return byte array, while sqlalchemy expects string, thus `decode()` call.
-    This function helped to solve JSON datetime conversion issue on JSONB column
+    The default JSON serializer in Python's json module.
     """
-    return orjson.dumps(
-        obj, option=orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_NAIVE_UTC
-    ).decode()
+    return json.dumps(obj)
 
+def json_deserializer(text):
+    """
+    The default JSON deserializer in Python's json module.
+    """
+    return json.loads(text)
 
 engine = create_engine(
     os.environ["DATABASE_URL"],
-    # required for sqlite
-    json_serializer=orjson_serializer,
-    json_deserializer=orjson.loads,
+    json_serializer=json_serializer,
+    json_deserializer=json_deserializer,
     connect_args={},
+    # If using PostgreSQL, the following line can enable the psycopg2 JSONB support:
+    # execution_options={"json_serializer": json_serializer, "json_deserializer": json_deserializer},
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 
 def get_db():
     db = SessionLocal()
