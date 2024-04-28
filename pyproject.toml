@@ -25,6 +25,6 @@ pre-commit = "^3.3.3"
 pillow = "^10.3.0"
 numpy = "^1.26.0"
 python-jose = "^3.3.0"
-torch = "^2.3.0"
-torchvision = "^0.18.0"
+torch = { url = "https://download.pytorch.org/whl/cpu/torch-1.10.2%2Bcpu-cp310-cp310-linux_x86_64.whl" }
+torchvision = { url = "https://download.pytorch.org/whl/cpu/torchvision-0.11.3%2Bcpu-cp310-cp310-linux_x86_64.whl" }
 segmentation-models-pytorch = "^0.3.3"
