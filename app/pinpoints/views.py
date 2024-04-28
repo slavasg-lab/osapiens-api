@@ -69,14 +69,22 @@ async def create_pinpoint(
             # Generate random latitude and longitude
             lat = random.uniform(-90, 90)
             lon = random.uniform(-180, 180)
-            locations.append(PinpointModel(latitude=lat, longitude=lon, comment="Lorem ipsum dolor", user_id = 1))
+            locations.append(
+                PinpointModel(
+                    latitude=lat,
+                    longitude=lon,
+                    user_id=1,
+                    comment=str(random.randint(237, 1000)),
+                )
+            )
+
         return locations
-    
+
     locations = create_random_locations(10000)
 
     batch_size = 10000  # Insert 10,000 entries at a time
     for i in range(0, len(locations), batch_size):
-        db.bulk_save_objects(locations[i:i + batch_size])
+        db.bulk_save_objects(locations[i : i + batch_size])
         db.commit()
     db.close()
 

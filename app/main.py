@@ -41,7 +41,7 @@ model = ForestSegmentation(
 # Load model weights (adjust path as necessary)
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 best_weight = torch.load(
-    "./rgb_forest_segmentation_model_0.9076792001724243_iou.pt", map_location=DEVICE
+    "./rgb_forest_segmentation_model.pt", map_location=DEVICE
 )
 model.load_state_dict(best_weight)
 model.eval()
